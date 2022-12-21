@@ -3,25 +3,23 @@ import 'package:ezlogin/ezlogin.dart';
 import 'my_custom_ezlogin_user.dart';
 
 Map<String, dynamic> defineNewUser(
-  EzLoginUser user, {
+  EzloginUser user, {
   required String password,
 }) =>
     {'user': user, 'password': password};
 
-class EzloginMock implements Ezlogin {
+class EzloginMock with Ezlogin {
   EzloginMock(this.initialDatabase);
 
   @override
-  String get usersPath => 'users';
+  bool get isLogged => currentUser != null;
 
   MyCustomEzloginUser? _currentUser;
   @override
   MyCustomEzloginUser? get currentUser => _currentUser;
-  @override
-  bool get isLogged => _currentUser != null;
 
   @override
-  Future<EzLoginUser?> user(String user) async {
+  Future<EzloginUser?> user(String username) async {
     if (!_users.containsKey(user)) return null;
 
     return _users[user]!['user'];
@@ -40,6 +38,7 @@ class EzloginMock implements Ezlogin {
   Future<EzloginStatus> login({
     required String username,
     required String password,
+    required Future<EzloginUser?> Function() getNewUserInfo,
     required Future<String?> Function() getNewPassword,
   }) async {
     await Future.delayed(const Duration(seconds: 1));
@@ -49,18 +48,10 @@ class EzloginMock implements Ezlogin {
       return EzloginStatus.wrongPassword;
     }
 
-    final user = _users[username]["user"];
-    if (user.shouldChangePassword) {
-      final newPassword = await getNewPassword();
-      if (newPassword == null) {
-        logout();
-        return EzloginStatus.cancelled;
-      }
-      updatePassword(user: user, newPassword: newPassword);
-    }
-
-    _currentUser = user;
-    return EzloginStatus.success;
+    return await finalizeLogin(
+        username: username,
+        getNewUserInfo: getNewUserInfo,
+        getNewPassword: getNewPassword);
   }
 
   @override
@@ -71,7 +62,7 @@ class EzloginMock implements Ezlogin {
 
   @override
   Future<EzloginStatus> updatePassword(
-      {required EzLoginUser user, required String newPassword}) async {
+      {required EzloginUser user, required String newPassword}) async {
     if (!_users.containsKey(user.email)) return EzloginStatus.wrongUsername;
 
     _users[user.email]!['password'] = newPassword;
@@ -80,7 +71,7 @@ class EzloginMock implements Ezlogin {
 
   @override
   Future<EzloginStatus> addUser({
-    required EzLoginUser newUser,
+    required EzloginUser newUser,
     required String password,
   }) async {
     if (_users.containsKey(newUser.email)) {
@@ -93,7 +84,7 @@ class EzloginMock implements Ezlogin {
 
   @override
   Future<EzloginStatus> modifyUser(
-      {required EzLoginUser user, required EzLoginUser newInfo}) async {
+      {required EzloginUser user, required EzloginUser newInfo}) async {
     if (!_users.containsKey(user.email)) return EzloginStatus.wrongUsername;
 
     _users[user.email] = newInfo;
@@ -102,7 +93,7 @@ class EzloginMock implements Ezlogin {
   }
 
   @override
-  Future<EzloginStatus> deleteUser({required EzLoginUser user}) async {
+  Future<EzloginStatus> deleteUser({required EzloginUser user}) async {
     if (!_users.containsKey(user.email)) return EzloginStatus.wrongUsername;
 
     _users.remove(user.email);

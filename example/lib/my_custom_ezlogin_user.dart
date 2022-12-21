@@ -1,6 +1,6 @@
 import 'package:ezlogin/ezlogin.dart';
 
-class MyCustomEzloginUser extends EzLoginUser {
+class MyCustomEzloginUser extends EzloginUser {
   final String firstName;
   final String lastName;
   final String notes;
@@ -35,7 +35,7 @@ class MyCustomEzloginUser extends EzLoginUser {
   }
 
   @override
-  EzLoginUser copyWith({
+  EzloginUser copyWith({
     String? firstName,
     String? lastName,
     String? email,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'ezlogin_mock.dart';
+import 'my_custom_ezlogin_user.dart';
 
 class EzlogExampleScreen extends StatefulWidget {
   const EzlogExampleScreen({super.key, required this.targetRouteName});
@@ -19,6 +20,15 @@ class _EzlogExampleScreenState extends State<EzlogExampleScreen> {
   String? _email;
   String? _password;
   Future<EzloginStatus>? _futureStatus;
+
+  Future<MyCustomEzloginUser> _createUser(String email) async {
+    return MyCustomEzloginUser(
+        firstName: 'Firstname',
+        lastName: 'Lastname',
+        email: email,
+        shouldChangePassword: false,
+        notes: 'I don\'t have any particular notes');
+  }
 
   Future<String> _changePassword() async {
     final password = await showDialog<String>(
@@ -43,6 +53,7 @@ class _EzlogExampleScreenState extends State<EzlogExampleScreen> {
     final status = await logger.login(
         username: _email!,
         password: _password!,
+        getNewUserInfo: () => _createUser(_email!),
         getNewPassword: _changePassword);
 
     // Make sure the page is still on before using the context again
