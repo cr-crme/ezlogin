@@ -23,11 +23,11 @@ class _EzlogExampleScreenState extends State<EzlogExampleScreen> {
 
   Future<MyCustomEzloginUser> _createUser(String email) async {
     return MyCustomEzloginUser(
-        firstName: 'Firstname',
-        lastName: 'Lastname',
-        email: email,
-        shouldChangePassword: false,
-        notes: 'I don\'t have any particular notes');
+      firstName: 'Firstname',
+      lastName: 'Lastname',
+      email: email,
+      shouldChangePassword: false,
+    );
   }
 
   Future<String> _changePassword() async {

@@ -32,8 +32,8 @@ mixin Ezlogin {
   Future<EzloginStatus> login({
     required String username,
     required String password,
-    required Future<EzloginUser?> Function() getNewUserInfo,
-    required Future<String?> Function() getNewPassword,
+    Future<EzloginUser?> Function()? getNewUserInfo,
+    Future<String?> Function()? getNewPassword,
   });
 
   ///
@@ -43,17 +43,18 @@ mixin Ezlogin {
   ///
   Future<EzloginStatus> finalizeLogin({
     required String username,
-    required Future<EzloginUser?> Function() getNewUserInfo,
-    required Future<String?> Function() getNewPassword,
+    required Future<EzloginUser?> Function()? getNewUserInfo,
+    required Future<String?> Function()? getNewPassword,
   }) async {
-    final currentUser = await user(username) ?? await getNewUserInfo();
+    final currentUser = await user(username) ??
+        (getNewUserInfo != null ? await getNewUserInfo() : null);
     if (currentUser == null) {
       logout();
       return EzloginStatus.cancelled;
     }
     modifyUser(user: currentUser, newInfo: currentUser);
 
-    if (currentUser.shouldChangePassword) {
+    if (getNewPassword != null && currentUser.shouldChangePassword) {
       final newPassword = await getNewPassword();
       if (newPassword == null) {
         logout();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ezlogin/ezlogin.dart';
 
 import 'login_screen.dart';
 import 'logged_screen.dart';
@@ -7,33 +8,26 @@ import 'my_ezlogin.dart';
 import 'my_custom_ezlogin_user.dart';
 
 ///
-/// Here is an dummy database to test. It creates
+/// Here is an dummy database to test. It populates the data base with the
+/// required data type. The two users we are creating here are
+/// `user1@user.qc` and `user2@user.qc` with both `123456` as password
+///
 final Map<String, dynamic> initialDatabase = {
-  'super1@user.qc': defineNewUser(
-      MyCustomEzloginUser(
-        firstName: 'Super',
-        lastName: 'One',
-        email: 'super1@user.qc',
-        shouldChangePassword: false,
-        notes: 'This is my second note',
-      ),
-      password: '123456'),
-  'super2@user.qc': defineNewUser(
-      MyCustomEzloginUser(
-        firstName: 'Super',
-        lastName: 'Two',
-        email: 'super2@user.qc',
-        shouldChangePassword: true,
-        notes: 'This is my third note',
-      ),
-      password: '123456'),
-  'normal1@user.qc': defineNewUser(
-    MyCustomEzloginUser(
-      firstName: 'Normal',
+  'user1@user.qc': userForEzloginMock(
+    user: MyCustomEzloginUser(
+      firstName: 'Super',
       lastName: 'One',
-      email: 'normal1@user.qc',
+      email: 'user1@user.qc',
       shouldChangePassword: false,
-      notes: 'This is my forth note',
+    ),
+    password: '123456',
+  ),
+  'user2@user.qc': userForEzloginMock(
+    user: MyCustomEzloginUser(
+      firstName: 'Super',
+      lastName: 'Two',
+      email: 'user2@user.qc',
+      shouldChangePassword: true,
     ),
     password: '123456',
   ),

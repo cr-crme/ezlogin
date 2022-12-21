@@ -62,8 +62,8 @@ class EzloginFirebase with Ezlogin {
   Future<EzloginStatus> login({
     required String username,
     required String password,
-    required Future<EzloginUser?> Function() getNewUserInfo,
-    required Future<String?> Function() getNewPassword,
+    Future<EzloginUser?> Function()? getNewUserInfo,
+    Future<String?> Function()? getNewPassword,
   }) async {
     try {
       await FirebaseAuth.instance

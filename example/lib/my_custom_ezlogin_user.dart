@@ -3,20 +3,17 @@ import 'package:ezlogin/ezlogin.dart';
 class MyCustomEzloginUser extends EzloginUser {
   final String firstName;
   final String lastName;
-  final String notes;
 
   MyCustomEzloginUser({
     required this.firstName,
     required this.lastName,
     required super.email,
     required super.shouldChangePassword,
-    required this.notes,
     super.id,
   });
   MyCustomEzloginUser.fromSerialized(map)
       : firstName = map['firstName'],
         lastName = map['lastName'],
-        notes = map['notes'],
         super.fromSerialized(map);
 
   @override
@@ -25,7 +22,6 @@ class MyCustomEzloginUser extends EzloginUser {
       ..addAll({
         'firstName': firstName,
         'lastName': lastName,
-        'notes': notes,
       });
   }
 
@@ -47,14 +43,12 @@ class MyCustomEzloginUser extends EzloginUser {
     lastName ??= this.lastName;
     email ??= this.email;
     shouldChangePassword ??= this.shouldChangePassword;
-    notes ??= this.notes;
     id ??= this.id;
     return MyCustomEzloginUser(
       firstName: firstName,
       lastName: lastName,
       email: email,
       shouldChangePassword: shouldChangePassword,
-      notes: notes,
       id: id,
     );
   }
