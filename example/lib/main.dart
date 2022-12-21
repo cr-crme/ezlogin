@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ezlogin/ezlogin.dart';
 
 import 'login_screen.dart';
 import 'logged_screen.dart';
 import 'ezlogin_mock.dart';
 import 'my_custom_ezlogin_user.dart';
 
-
 ///
-/// Here is an dummy database to test. It creates  
+/// Here is an dummy database to test. It creates
 final Map<String, dynamic> initialDatabase = {
   'a': defineNewUser(
       MyCustomEzloginUser(
         firstName: 'Super',
         lastName: 'Three',
         email: 'super3@user.qc',
-        userType: EzloginUserType.superUser,
         shouldChangePassword: true,
         notes: 'This is my first note',
       ),
@@ -26,7 +23,6 @@ final Map<String, dynamic> initialDatabase = {
         firstName: 'Super',
         lastName: 'One',
         email: 'super1@user.qc',
-        userType: EzloginUserType.superUser,
         shouldChangePassword: false,
         notes: 'This is my second note',
       ),
@@ -36,7 +32,6 @@ final Map<String, dynamic> initialDatabase = {
         firstName: 'Super',
         lastName: 'Two',
         email: 'super2@user.qc',
-        userType: EzloginUserType.superUser,
         shouldChangePassword: true,
         notes: 'This is my third note',
       ),
@@ -46,7 +41,6 @@ final Map<String, dynamic> initialDatabase = {
       firstName: 'Normal',
       lastName: 'One',
       email: 'normal1@user.qc',
-      userType: EzloginUserType.user,
       shouldChangePassword: false,
       notes: 'This is my forth note',
     ),

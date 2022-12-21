@@ -14,7 +14,7 @@ class LoggedScreen extends StatelessWidget {
       body: Center(
         child: Text(
           'You are logged in as: ${logged.currentUser!.firstName}\n'
-          'which is a ${logged.currentUser!.userType.name}\nCongrats!',
+          'Congrats!',
         ),
       ),
     );

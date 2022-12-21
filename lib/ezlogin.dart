@@ -1,7 +1,7 @@
-import 'ezlogin_enum.dart';
+import 'ezlogin_status.dart';
 import 'ezlogin_user.dart';
 
-export 'ezlogin_enum.dart';
+export 'ezlogin_status.dart';
 export 'ezlogin_user.dart';
 
 mixin Ezlogin {

@@ -9,7 +9,6 @@ class MyCustomEzloginUser extends EzLoginUser {
     required this.firstName,
     required this.lastName,
     required super.email,
-    required super.userType,
     required super.shouldChangePassword,
     required this.notes,
     super.id,
@@ -40,7 +39,6 @@ class MyCustomEzloginUser extends EzLoginUser {
     String? firstName,
     String? lastName,
     String? email,
-    EzloginUserType? userType,
     bool? shouldChangePassword,
     String? notes,
     String? id,
@@ -48,7 +46,6 @@ class MyCustomEzloginUser extends EzLoginUser {
     firstName ??= this.firstName;
     lastName ??= this.lastName;
     email ??= this.email;
-    userType ??= this.userType;
     shouldChangePassword ??= this.shouldChangePassword;
     notes ??= this.notes;
     id ??= this.id;
@@ -56,7 +53,6 @@ class MyCustomEzloginUser extends EzLoginUser {
       firstName: firstName,
       lastName: lastName,
       email: email,
-      userType: userType,
       shouldChangePassword: shouldChangePassword,
       notes: notes,
       id: id,
