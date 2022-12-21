@@ -2,8 +2,8 @@ import 'package:ezlogin/ezlogin.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'ezlogin_mock.dart';
 import 'my_custom_ezlogin_user.dart';
+import 'my_ezlogin.dart';
 
 class EzlogExampleScreen extends StatefulWidget {
   const EzlogExampleScreen({super.key, required this.targetRouteName});
@@ -49,7 +49,7 @@ class _EzlogExampleScreenState extends State<EzlogExampleScreen> {
     _formKey.currentState!.save();
 
     // Login with the Notifier
-    final logger = Provider.of<EzloginMock>(context, listen: false);
+    final logger = Provider.of<MyEzlogin>(context, listen: false);
     final status = await logger.login(
         username: _email!,
         password: _password!,

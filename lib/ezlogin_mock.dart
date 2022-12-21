@@ -1,28 +1,20 @@
 import 'package:ezlogin/ezlogin.dart';
 
-import 'my_custom_ezlogin_user.dart';
-
-Map<String, dynamic> defineNewUser(
-  EzloginUser user, {
-  required String password,
-}) =>
-    {'user': user, 'password': password};
-
 class EzloginMock with Ezlogin {
   EzloginMock(this.initialDatabase);
 
   @override
   bool get isLogged => currentUser != null;
 
-  MyCustomEzloginUser? _currentUser;
+  EzloginUser? _currentUser;
   @override
-  MyCustomEzloginUser? get currentUser => _currentUser;
+  EzloginUser? get currentUser => _currentUser;
 
   @override
   Future<EzloginUser?> user(String username) async {
-    if (!_users.containsKey(user)) return null;
+    if (!_users.containsKey(username)) return null;
 
-    return _users[user]!['user'];
+    return _users[username]!['user'];
   }
 
   @override
@@ -43,15 +35,19 @@ class EzloginMock with Ezlogin {
   }) async {
     await Future.delayed(const Duration(seconds: 1));
     if (!_users.containsKey(username)) return EzloginStatus.wrongUsername;
+    final selectedUser = _users[username];
 
-    if (password != _users[username]['password']) {
+    if (password != selectedUser['password']) {
       return EzloginStatus.wrongPassword;
     }
 
-    return await finalizeLogin(
+    final status = await finalizeLogin(
         username: username,
         getNewUserInfo: getNewUserInfo,
         getNewPassword: getNewPassword);
+
+    _currentUser = await user(username);
+    return status;
   }
 
   @override
@@ -78,7 +74,7 @@ class EzloginMock with Ezlogin {
       return EzloginStatus.couldNotCreateUser;
     }
 
-    _users[newUser.email] = defineNewUser(newUser, password: password);
+    _users[newUser.email]!["user"] = newUser;
     return EzloginStatus.success;
   }
 
@@ -87,7 +83,7 @@ class EzloginMock with Ezlogin {
       {required EzloginUser user, required EzloginUser newInfo}) async {
     if (!_users.containsKey(user.email)) return EzloginStatus.wrongUsername;
 
-    _users[user.email] = newInfo;
+    _users[user.email]!["user"] = newInfo;
 
     return EzloginStatus.success;
   }

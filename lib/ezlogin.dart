@@ -1,9 +1,10 @@
 import 'ezlogin_status.dart';
 import 'ezlogin_user.dart';
 
+export 'ezlogin_firebase.dart';
+export 'ezlogin_mock.dart';
 export 'ezlogin_status.dart';
 export 'ezlogin_user.dart';
-export 'ezlogin_firebase.dart';
 
 mixin Ezlogin {
   ///

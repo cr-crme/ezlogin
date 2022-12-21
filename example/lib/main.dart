@@ -3,21 +3,12 @@ import 'package:provider/provider.dart';
 
 import 'login_screen.dart';
 import 'logged_screen.dart';
-import 'ezlogin_mock.dart';
+import 'my_ezlogin.dart';
 import 'my_custom_ezlogin_user.dart';
 
 ///
 /// Here is an dummy database to test. It creates
 final Map<String, dynamic> initialDatabase = {
-  'a': defineNewUser(
-      MyCustomEzloginUser(
-        firstName: 'Super',
-        lastName: 'Three',
-        email: 'super3@user.qc',
-        shouldChangePassword: true,
-        notes: 'This is my first note',
-      ),
-      password: 'a'),
   'super1@user.qc': defineNewUser(
       MyCustomEzloginUser(
         firstName: 'Super',
@@ -58,7 +49,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<EzloginMock>(create: (_) => EzloginMock(initialDatabase))
+        Provider<MyEzlogin>(create: (_) => MyEzlogin(initialDatabase))
       ],
       child: MaterialApp(
         title: 'Ezlogin showcase',
