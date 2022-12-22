@@ -46,13 +46,21 @@ mixin Ezlogin {
     required Future<EzloginUser?> Function()? getNewUserInfo,
     required Future<String?> Function()? getNewPassword,
   }) async {
-    final currentUser = await user(username) ??
-        (getNewUserInfo != null ? await getNewUserInfo() : null);
+    var currentUser = await user(username);
+
     if (currentUser == null) {
-      logout();
-      return EzloginStatus.cancelled;
+      if (getNewUserInfo != null) {
+        currentUser = await getNewUserInfo();
+        if (currentUser == null) {
+          logout();
+          return EzloginStatus.cancelled;
+        }
+        await modifyUser(user: currentUser, newInfo: currentUser);
+      } else {
+        logout();
+        return EzloginStatus.cancelled;
+      }
     }
-    modifyUser(user: currentUser, newInfo: currentUser);
 
     if (getNewPassword != null && currentUser.shouldChangePassword) {
       final newPassword = await getNewPassword();
@@ -60,7 +68,7 @@ mixin Ezlogin {
         logout();
         return EzloginStatus.cancelled;
       }
-      updatePassword(user: currentUser, newPassword: newPassword);
+      await updatePassword(user: currentUser, newPassword: newPassword);
     }
     return EzloginStatus.success;
   }
