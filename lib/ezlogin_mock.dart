@@ -80,7 +80,7 @@ class EzloginMock with Ezlogin {
       return EzloginStatus.couldNotCreateUser;
     }
 
-    _users[newUser.email]!["user"] = newUser;
+    _users[newUser.email] = {"user": newUser, "password": password};
     return EzloginStatus.success;
   }
 
