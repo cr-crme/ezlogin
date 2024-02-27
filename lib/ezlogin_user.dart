@@ -16,25 +16,25 @@ class EzloginUser extends ItemSerializable {
   // Constructors and (de)serializer
   EzloginUser({
     required this.email,
-    required this.shouldChangePassword,
+    required this.mustChangePassword,
     id,
   }) : super(id: id ??= emailToPath(email));
   EzloginUser.fromSerialized(map)
       : email = map['email'],
-        shouldChangePassword = map[shouldChangePasswordKey],
+        mustChangePassword = map[mustChangePasswordKey],
         super.fromSerialized(map);
 
   EzloginUser copyWith({
     String? email,
-    bool? shouldChangePassword,
+    bool? mustChangePassword,
     String? id,
   }) {
     email ??= this.email;
-    shouldChangePassword ??= this.shouldChangePassword;
+    mustChangePassword ??= this.mustChangePassword;
     id ??= this.id;
     return EzloginUser(
       email: email,
-      shouldChangePassword: shouldChangePassword,
+      mustChangePassword: mustChangePassword,
       id: id,
     );
   }
@@ -43,7 +43,7 @@ class EzloginUser extends ItemSerializable {
   Map<String, dynamic> serializedMap() {
     return {
       'email': email,
-      shouldChangePasswordKey: shouldChangePassword,
+      mustChangePasswordKey: mustChangePassword,
     };
   }
 
@@ -53,6 +53,6 @@ class EzloginUser extends ItemSerializable {
 
   // Attributes and methods
   final String email;
-  final bool shouldChangePassword;
-  static String shouldChangePasswordKey = 'changePassword';
+  final bool mustChangePassword;
+  static String mustChangePasswordKey = 'changePassword';
 }

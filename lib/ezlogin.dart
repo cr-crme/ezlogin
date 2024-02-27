@@ -62,7 +62,7 @@ mixin Ezlogin {
       }
     }
 
-    if (getNewPassword != null && currentUser.shouldChangePassword) {
+    if (getNewPassword != null && currentUser.mustChangePassword) {
       final newPassword = await getNewPassword();
       if (newPassword == null) {
         logout();
@@ -87,7 +87,7 @@ mixin Ezlogin {
 
   ///
   /// Add a [newUser] to the users with a default [password]. The flag
-  /// [shouldChangePassword] should be set to true, so the user will have to
+  /// [mustChangePassword] should be set to true, so the user will have to
   /// change their password when connecting the first time.
   ///
   Future<EzloginStatus> addUser(
@@ -106,7 +106,7 @@ mixin Ezlogin {
 
   ///
   /// Change the password of the [user] by [newPassword]. This method
-  /// should set the [shouldChangePassword] flag to false afterwards
+  /// should set the [mustChangePassword] flag to false afterwards
   ///
   Future<EzloginStatus> updatePassword(
       {required EzloginUser user, required String newPassword});

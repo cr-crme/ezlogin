@@ -8,7 +8,7 @@ class MyCustomEzloginUser extends EzloginUser {
     required this.firstName,
     required this.lastName,
     required super.email,
-    required super.shouldChangePassword,
+    required super.mustChangePassword,
     super.id,
   });
   MyCustomEzloginUser.fromSerialized(map)
@@ -35,20 +35,20 @@ class MyCustomEzloginUser extends EzloginUser {
     String? firstName,
     String? lastName,
     String? email,
-    bool? shouldChangePassword,
+    bool? mustChangePassword,
     String? notes,
     String? id,
   }) {
     firstName ??= this.firstName;
     lastName ??= this.lastName;
     email ??= this.email;
-    shouldChangePassword ??= this.shouldChangePassword;
+    mustChangePassword ??= this.mustChangePassword;
     id ??= this.id;
     return MyCustomEzloginUser(
       firstName: firstName,
       lastName: lastName,
       email: email,
-      shouldChangePassword: shouldChangePassword,
+      mustChangePassword: mustChangePassword,
       id: id,
     );
   }

@@ -26,7 +26,7 @@ class _EzlogExampleScreenState extends State<EzlogExampleScreen> {
       firstName: 'Firstname',
       lastName: 'Lastname',
       email: email,
-      shouldChangePassword: false,
+      mustChangePassword: false,
     );
   }
 

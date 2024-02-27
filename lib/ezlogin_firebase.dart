@@ -120,7 +120,7 @@ class EzloginFirebase with Ezlogin {
     try {
       await FirebaseDatabase.instance
           .ref(usersPath)
-          .child('$id/${EzloginUser.shouldChangePasswordKey}')
+          .child('$id/${EzloginUser.mustChangePasswordKey}')
           .set(false);
     } catch (e) {
       return EzloginStatus.unrecognizedError;
