@@ -40,9 +40,14 @@ class EzloginFirebase with Ezlogin {
 
   @override
   Future<EzloginUser?> user(String username) async {
-    final data =
-        await FirebaseDatabase.instance.ref('$usersPath/$username').get();
-    return data.value == null ? null : EzloginUser.fromSerialized(data.value);
+    try {
+      final data =
+          await FirebaseDatabase.instance.ref('$usersPath/$username').get();
+      return data.value == null ? null : EzloginUser.fromSerialized(data.value);
+    } on Exception {
+      debugPrint('Error while fetching user $username');
+      return null;
+    }
   }
 
   @override
