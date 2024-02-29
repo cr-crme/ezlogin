@@ -42,11 +42,10 @@ mixin Ezlogin {
   /// in the case the user does not change it.
   ///
   Future<EzloginStatus> finalizeLogin({
-    required String username,
     required Future<EzloginUser?> Function()? getNewUserInfo,
     required Future<String?> Function()? getNewPassword,
   }) async {
-    var currentUser = await user(username);
+    var currentUser = await fetchCurrentUser();
 
     if (currentUser == null) {
       if (getNewUserInfo != null) {
@@ -55,6 +54,7 @@ mixin Ezlogin {
           logout();
           return EzloginStatus.cancelled;
         }
+        currentUser = await validateNewUserInfo(currentUser);
         await modifyUser(user: currentUser, newInfo: currentUser);
       } else {
         logout();
@@ -79,6 +79,13 @@ mixin Ezlogin {
   Future<EzloginStatus> logout();
 
   ///
+  /// Get the current user from the database
+  /// (this method should be called after a successful login) or return null
+  /// if the user does not exist in the database
+  ///
+  Future<EzloginUser?> fetchCurrentUser();
+
+  ///
   /// Get a specific user of a given [username] credential, usually email. For
   /// security purposes, this function should fail if the requester
   /// is not logged in (otherwise it exposes the database to everyone)
@@ -86,11 +93,19 @@ mixin Ezlogin {
   Future<EzloginUser?> user(String username);
 
   ///
+  /// Validate the [user] information. This method should be called when
+  /// a new user is created to ensure that the information is valid.
+  /// It should return the user with the validated information.
+  /// If the information is not valid, it should be adjusted to be valid.
+  ///
+  Future<EzloginUser> validateNewUserInfo(EzloginUser user);
+
+  ///
   /// Add a [newUser] to the users with a default [password]. The flag
   /// [mustChangePassword] should be set to true, so the user will have to
   /// change their password when connecting the first time.
   ///
-  Future<EzloginStatus> addUser(
+  Future<EzloginUser?> addUser(
       {required EzloginUser newUser, required String password});
 
   ///

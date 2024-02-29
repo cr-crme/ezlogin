@@ -1,24 +1,12 @@
 import 'package:enhanced_containers/enhanced_containers.dart';
 
-String emailToPath(String email) {
-  var reducedEmail = email.replaceAll('@', '__at__');
-  reducedEmail = reducedEmail.replaceAll('.', '__dot__');
-  return reducedEmail;
-}
-
-String pathToEmail(String reducedEmail) {
-  var email = reducedEmail.replaceAll('__at__', '@');
-  email = email.replaceAll('__dot__', '.');
-  return email;
-}
-
 class EzloginUser extends ItemSerializable {
   // Constructors and (de)serializer
   EzloginUser({
     required this.email,
     required this.mustChangePassword,
-    id,
-  }) : super(id: id ??= emailToPath(email));
+    required super.id,
+  });
   EzloginUser.fromSerialized(map)
       : email = map['email'],
         mustChangePassword = map[mustChangePasswordKey],

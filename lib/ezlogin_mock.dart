@@ -17,10 +17,20 @@ class EzloginMock with Ezlogin {
   EzloginUser? get currentUser => _currentUser;
 
   @override
+  Future<EzloginUser?> fetchCurrentUser() async {
+    return _currentUser;
+  }
+
+  @override
   Future<EzloginUser?> user(String username) async {
     if (!_users.containsKey(username)) return null;
 
     return _users[username]!['user'];
+  }
+
+  @override
+  Future<EzloginUser> validateNewUserInfo(EzloginUser user) async {
+    return user;
   }
 
   @override
@@ -48,9 +58,7 @@ class EzloginMock with Ezlogin {
     }
 
     final status = await finalizeLogin(
-        username: username,
-        getNewUserInfo: getNewUserInfo,
-        getNewPassword: getNewPassword);
+        getNewUserInfo: getNewUserInfo, getNewPassword: getNewPassword);
 
     _currentUser = await user(username);
     return status;
@@ -72,16 +80,16 @@ class EzloginMock with Ezlogin {
   }
 
   @override
-  Future<EzloginStatus> addUser({
+  Future<EzloginUser?> addUser({
     required EzloginUser newUser,
     required String password,
   }) async {
     if (_users.containsKey(newUser.email)) {
-      return EzloginStatus.couldNotCreateUser;
+      return null;
     }
 
     _users[newUser.email] = {"user": newUser, "password": password};
-    return EzloginStatus.success;
+    return newUser;
   }
 
   @override

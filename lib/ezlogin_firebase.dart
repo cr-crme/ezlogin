@@ -32,10 +32,22 @@ class EzloginFirebase with Ezlogin {
   bool get isLogged => _currentUser != null;
 
   @override
+  Future<EzloginUser?> fetchCurrentUser() async {
+    if (FirebaseAuth.instance.currentUser == null) return null;
+
+    return user(FirebaseAuth.instance.currentUser!.uid);
+  }
+
+  @override
   Future<EzloginUser?> user(String username) async {
-    final id = emailToPath(username);
-    final data = await FirebaseDatabase.instance.ref('$usersPath/$id').get();
+    final data =
+        await FirebaseDatabase.instance.ref('$usersPath/$username').get();
     return data.value == null ? null : EzloginUser.fromSerialized(data.value);
+  }
+
+  @override
+  Future<EzloginUser> validateNewUserInfo(EzloginUser user) async {
+    return user.copyWith(id: FirebaseAuth.instance.currentUser?.uid);
   }
 
   @override
@@ -79,10 +91,8 @@ class EzloginFirebase with Ezlogin {
     }
 
     final status = await finalizeLogin(
-        username: username,
-        getNewUserInfo: getNewUserInfo,
-        getNewPassword: getNewPassword);
-    _currentUser = await user(username);
+        getNewUserInfo: getNewUserInfo, getNewPassword: getNewPassword);
+    _currentUser = await fetchCurrentUser();
 
     return status;
   }
@@ -116,11 +126,10 @@ class EzloginFirebase with Ezlogin {
       return EzloginStatus.couldNotCreateUser;
     }
 
-    final id = emailToPath(user.email);
     try {
       await FirebaseDatabase.instance
           .ref(usersPath)
-          .child('$id/${EzloginUser.mustChangePasswordKey}')
+          .child('${user.id}/${EzloginUser.mustChangePasswordKey}')
           .set(false);
     } catch (e) {
       return EzloginStatus.unrecognizedError;
@@ -129,27 +138,27 @@ class EzloginFirebase with Ezlogin {
   }
 
   @override
-  Future<EzloginStatus> addUser(
+  Future<EzloginUser?> addUser(
       {required EzloginUser newUser, required String password}) async {
     final authenticator = FirebaseAuth.instance;
 
     try {
-      await authenticator.createUserWithEmailAndPassword(
+      final newUserInfo = await authenticator.createUserWithEmailAndPassword(
           email: newUser.email, password: password);
+      newUser = newUser.copyWith(id: newUserInfo.user?.uid);
     } catch (e) {
-      return EzloginStatus.couldNotCreateUser;
+      return null;
     }
 
-    final id = emailToPath(newUser.email);
     try {
       await FirebaseDatabase.instance
           .ref(usersPath)
-          .child(id)
+          .child(newUser.id)
           .set(newUser.serialize());
     } catch (e) {
-      return EzloginStatus.unrecognizedError;
+      return null;
     }
-    return EzloginStatus.success;
+    return newUser;
   }
 
   @override
@@ -159,10 +168,9 @@ class EzloginFirebase with Ezlogin {
       _currentUser = user;
     }
 
-    final id = emailToPath(user.email);
     await FirebaseDatabase.instance
         .ref(usersPath)
-        .child(id)
+        .child(user.id)
         .set(newInfo.serialize());
     return EzloginStatus.success;
   }
