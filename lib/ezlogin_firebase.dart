@@ -14,6 +14,10 @@ class EzloginFirebase with Ezlogin {
   ///
   EzloginFirebase({this.usersPath = 'users'});
 
+  String? _username;
+  String? _password;
+  FirebaseApp? _createUserFirebaseApp;
+
   ///
   /// Path to [users] in the database
   ///
@@ -59,7 +63,10 @@ class EzloginFirebase with Ezlogin {
   Future<void> initialize(
       {bool useEmulator = false, FirebaseOptions? currentPlatform}) async {
     WidgetsFlutterBinding.ensureInitialized();
+
     await Firebase.initializeApp(options: currentPlatform);
+    _createUserFirebaseApp = await Firebase.initializeApp(
+        name: 'userCreator', options: currentPlatform);
 
     if (useEmulator) {
       // Connect Firebase to local emulators
@@ -85,6 +92,8 @@ class EzloginFirebase with Ezlogin {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: username, password: password);
+      _username = username;
+      _password = password;
     } catch (e) {
       if ((e as FirebaseAuthException).code == 'user-not-found') {
         return EzloginStatus.wrongUsername;
@@ -107,6 +116,8 @@ class EzloginFirebase with Ezlogin {
     final authenticator = FirebaseAuth.instance;
 
     _currentUser = null;
+    _username = null;
+    _password = null;
     try {
       await authenticator.signOut();
     } catch (e) {
@@ -145,12 +156,19 @@ class EzloginFirebase with Ezlogin {
   @override
   Future<EzloginUser?> addUser(
       {required EzloginUser newUser, required String password}) async {
-    final authenticator = FirebaseAuth.instance;
-
     try {
-      final newUserInfo = await authenticator.createUserWithEmailAndPassword(
+      // We have to use this secondary app to create a user because creating a
+      // user with the main app will automatically log in with this user
+      final authenticator =
+          FirebaseAuth.instanceFor(app: _createUserFirebaseApp!);
+      await authenticator.signInWithEmailAndPassword(
+          email: _username!, password: _password!);
+
+      await authenticator.createUserWithEmailAndPassword(
           email: newUser.email, password: password);
-      newUser = newUser.copyWith(id: newUserInfo.user?.uid);
+      newUser = newUser.copyWith(id: authenticator.currentUser!.uid);
+
+      await authenticator.signOut();
     } catch (e) {
       return null;
     }
