@@ -39,7 +39,7 @@ class EzloginFirebase with Ezlogin {
   Future<EzloginUser?> fetchCurrentUser() async {
     if (FirebaseAuth.instance.currentUser == null) return null;
 
-    return user(FirebaseAuth.instance.currentUser!.uid);
+    return await user(FirebaseAuth.instance.currentUser!.uid);
   }
 
   @override
@@ -80,6 +80,8 @@ class EzloginFirebase with Ezlogin {
         return true;
       }());
     }
+
+    _currentUser = await fetchCurrentUser();
   }
 
   @override
