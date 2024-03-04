@@ -158,20 +158,20 @@ class EzloginFirebase with Ezlogin {
   @override
   Future<EzloginUser?> addUser(
       {required EzloginUser newUser, required String password}) async {
-    try {
-      // We have to use this secondary app to create a user because creating a
-      // user with the main app will automatically log in with this user
-      final authenticator =
-          FirebaseAuth.instanceFor(app: _createUserFirebaseApp!);
-      await authenticator.signInWithEmailAndPassword(
-          email: _username!, password: _password!);
+    // We have to use this secondary app to create a user because creating a
+    // user with the main app will automatically log in with this user
+    final authenticator =
+        FirebaseAuth.instanceFor(app: _createUserFirebaseApp!);
+    await authenticator.signInWithEmailAndPassword(
+        email: _username!, password: _password!);
 
+    try {
       await authenticator.createUserWithEmailAndPassword(
           email: newUser.email, password: password);
       newUser = newUser.copyWith(id: authenticator.currentUser!.uid);
-
       await authenticator.signOut();
     } catch (e) {
+      await authenticator.signOut();
       return null;
     }
 
