@@ -43,15 +43,28 @@ class EzloginFirebase with Ezlogin {
   }
 
   @override
-  Future<EzloginUser?> user(String username) async {
+  Future<EzloginUser?> user(String id) async {
     try {
-      final data =
-          await FirebaseDatabase.instance.ref('$usersPath/$username').get();
+      final data = await FirebaseDatabase.instance.ref('$usersPath/$id').get();
       return data.value == null ? null : EzloginUser.fromSerialized(data.value);
     } on Exception {
-      debugPrint('Error while fetching user $username');
+      debugPrint('Error while fetching user $id');
       return null;
     }
+  }
+
+  @override
+  Future<EzloginUser?> userFromEmail(String email) async {
+    final data = await FirebaseDatabase.instance
+        .ref(usersPath)
+        .orderByChild('email')
+        .equalTo(email)
+        .get();
+
+    if (data.value == null) return null;
+
+    return EzloginUser.fromSerialized(
+        (data.value as Map?)!.values.first as Map);
   }
 
   @override

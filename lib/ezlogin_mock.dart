@@ -22,10 +22,17 @@ class EzloginMock with Ezlogin {
   }
 
   @override
-  Future<EzloginUser?> user(String username) async {
-    if (!_users.containsKey(username)) return null;
+  Future<EzloginUser?> user(String id) async {
+    if (!_users.containsKey(id)) return null;
 
-    return _users[username]!['user'];
+    return _users[id]!['user'];
+  }
+
+  @override
+  Future<EzloginUser?> userFromEmail(String email) async {
+    if (!_users.containsKey(email)) return null;
+
+    return _users[email]!['user'];
   }
 
   @override

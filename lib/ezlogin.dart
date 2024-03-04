@@ -86,11 +86,17 @@ mixin Ezlogin {
   Future<EzloginUser?> fetchCurrentUser();
 
   ///
-  /// Get a specific user of a given [username] credential, usually email. For
+  /// Get a specific user of a given [id] credential. For
   /// security purposes, this function should fail if the requester
   /// is not logged in (otherwise it exposes the database to everyone)
   ///
-  Future<EzloginUser?> user(String username);
+  Future<EzloginUser?> user(String id);
+
+  ///
+  /// Get a specific user of a given [email] credential. For
+  /// security purposes, this function should fail if the requester
+  /// is not logged in (otherwise it exposes the database to everyone)
+  Future<EzloginUser?> userFromEmail(String email);
 
   ///
   /// Validate the [user] information. This method should be called when
