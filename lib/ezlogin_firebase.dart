@@ -173,6 +173,8 @@ class EzloginFirebase with Ezlogin {
       {required EzloginUser newUser, required String password}) async {
     // We have to use this secondary app to create a user because creating a
     // user with the main app will automatically log in with this user
+    if (_username == null || _password == null) return null;
+
     final authenticator =
         FirebaseAuth.instanceFor(app: _createUserFirebaseApp!);
     await authenticator.signInWithEmailAndPassword(

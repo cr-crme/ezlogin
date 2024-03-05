@@ -2,6 +2,7 @@ enum EzloginStatus {
   none,
   waitingForLogin,
   success,
+  needAuthentication,
   newUser,
   alreadyCreated,
   wrongInfoWhileCreating,
