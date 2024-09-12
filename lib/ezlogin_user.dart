@@ -7,10 +7,10 @@ class EzloginUser extends ItemSerializable {
     required this.mustChangePassword,
     required super.id,
   });
-  EzloginUser.fromSerialized(map)
+  EzloginUser.fromSerialized(super.map)
       : email = map['email'],
         mustChangePassword = map[mustChangePasswordKey],
-        super.fromSerialized(map);
+        super.fromSerialized();
 
   EzloginUser copyWith({
     String? email,
