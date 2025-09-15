@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'ezlogin.dart';
 
 class EzloginFirebase with Ezlogin {
@@ -89,6 +90,7 @@ class EzloginFirebase with Ezlogin {
         FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
         FirebaseDatabase.instance.useDatabaseEmulator(
             !kIsWeb && Platform.isAndroid ? '10.0.2.2' : 'localhost', 9000);
+
         FirebaseStorage.instance.useStorageEmulator('localhost', 9199);
         return true;
       }());
@@ -231,5 +233,15 @@ class EzloginFirebase with Ezlogin {
       return EzloginStatus.cancelled;
     }
     return EzloginStatus.success;
+  }
+
+  Future<String?> sendPasswordResetEmail({required String email}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      debugPrint(e.code);
+      return e.code.toString();
+    }
+    return null;
   }
 }
