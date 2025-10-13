@@ -122,4 +122,10 @@ class EzloginMock with Ezlogin {
     _users = initialDatabase;
     return EzloginStatus.success;
   }
+
+  @override
+  Future<bool> resetPassword({required String email}) {
+    // TODO: implement resetPassword
+    throw UnimplementedError();
+  }
 }

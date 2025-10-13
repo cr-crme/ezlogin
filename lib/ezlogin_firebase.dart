@@ -235,13 +235,14 @@ class EzloginFirebase with Ezlogin {
     return EzloginStatus.success;
   }
 
-  Future<String?> sendPasswordResetEmail({required String email}) async {
+  @override
+  Future<bool> resetPassword({required String email}) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       debugPrint(e.code);
-      return e.code.toString();
+      return false;
     }
-    return null;
+    return true;
   }
 }
