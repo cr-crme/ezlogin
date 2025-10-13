@@ -137,5 +137,8 @@ mixin Ezlogin {
   ///
   Future<EzloginStatus> clearUsers();
 
+  ///
+  /// Requests a password reset by sending an email to the account associated with the given [email]
+  ///
   Future<bool> resetPassword({required String email});
 }

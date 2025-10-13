@@ -124,8 +124,7 @@ class EzloginMock with Ezlogin {
   }
 
   @override
-  Future<bool> resetPassword({required String email}) {
-    // TODO: implement resetPassword
-    throw UnimplementedError();
+  Future<bool> resetPassword({required String email}) async {
+    return Future.value(true);
   }
 }
