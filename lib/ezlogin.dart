@@ -136,4 +136,9 @@ mixin Ezlogin {
   /// Completely clear the database. This is mostly for debugging purposes
   ///
   Future<EzloginStatus> clearUsers();
+
+  ///
+  /// Requests a password reset using the preferred method by the implementation
+  ///
+  Future<bool> resetPassword({required String email});
 }

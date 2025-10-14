@@ -122,4 +122,9 @@ class EzloginMock with Ezlogin {
     _users = initialDatabase;
     return EzloginStatus.success;
   }
+
+  @override
+  Future<bool> resetPassword({required String email}) async {
+    return Future.value(true);
+  }
 }
