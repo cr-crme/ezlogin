@@ -47,7 +47,9 @@ class EzloginFirebase with Ezlogin {
   Future<EzloginUser?> user(String id) async {
     try {
       final data = await FirebaseDatabase.instance.ref('$usersPath/$id').get();
-      return data.value == null ? null : EzloginUser.fromSerialized(data.value);
+      return data.value == null
+          ? null
+          : EzloginUser.fromSerialized(data.value as Map<String, dynamic>?);
     } on Exception {
       debugPrint('Error while fetching user $id');
       return null;
@@ -65,7 +67,7 @@ class EzloginFirebase with Ezlogin {
     if (data.value == null) return null;
 
     return EzloginUser.fromSerialized(
-        (data.value as Map?)!.values.first as Map);
+        (data.value as Map?)!.values.first as Map<String, dynamic>?);
   }
 
   @override

@@ -1,4 +1,4 @@
-import 'package:enhanced_containers/enhanced_containers.dart';
+import 'package:enhanced_containers_foundation/item_serializable.dart';
 
 class EzloginUser extends ItemSerializable {
   // Constructors and (de)serializer
@@ -8,8 +8,8 @@ class EzloginUser extends ItemSerializable {
     required super.id,
   });
   EzloginUser.fromSerialized(super.map)
-      : email = map['email'],
-        mustChangePassword = map[mustChangePasswordKey],
+      : email = map?['email'],
+        mustChangePassword = map?[mustChangePasswordKey],
         super.fromSerialized();
 
   EzloginUser copyWith({
