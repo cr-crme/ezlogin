@@ -1,13 +1,15 @@
 import 'dart:io';
 
+import 'package:ezlogin/ezlogin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
-import 'ezlogin.dart';
+final _logger = Logger('EzloginFirebase');
 
 class EzloginFirebase with Ezlogin {
   ///
@@ -51,7 +53,7 @@ class EzloginFirebase with Ezlogin {
           ? null
           : EzloginUser.fromSerialized(data.value as Map<String, dynamic>?);
     } on Exception {
-      debugPrint('Error while fetching user $id');
+      _logger.severe('Error while fetching user $id');
       return null;
     }
   }
@@ -242,7 +244,7 @@ class EzloginFirebase with Ezlogin {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
-      debugPrint(e.code);
+      _logger.severe(e.code);
       return false;
     }
     return true;
