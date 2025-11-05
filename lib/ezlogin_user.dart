@@ -35,7 +35,7 @@ class EzloginUser extends ItemSerializable {
     };
   }
 
-  EzloginUser deserializeItem(map) {
+  EzloginUser deserializeItem(Map? map) {
     return EzloginUser.fromSerialized(map);
   }
 

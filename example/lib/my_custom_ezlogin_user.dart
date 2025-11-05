@@ -11,10 +11,10 @@ class MyCustomEzloginUser extends EzloginUser {
     required super.mustChangePassword,
     super.id,
   });
-  MyCustomEzloginUser.fromSerialized(map)
-      : firstName = map['firstName'],
-        lastName = map['lastName'],
-        super.fromSerialized(map);
+  MyCustomEzloginUser.fromSerialized(super.map)
+      : firstName = map?['firstName'] ?? '',
+        lastName = map?['lastName'] ?? '',
+        super.fromSerialized();
 
   @override
   Map<String, dynamic> serializedMap() {

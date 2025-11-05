@@ -51,7 +51,7 @@ class EzloginFirebase with Ezlogin {
       final data = await FirebaseDatabase.instance.ref('$usersPath/$id').get();
       return data.value == null
           ? null
-          : EzloginUser.fromSerialized(data.value as Map<String, dynamic>?);
+          : EzloginUser.fromSerialized(data.value as Map?);
     } on Exception {
       _logger.severe('Error while fetching user $id');
       return null;
@@ -69,7 +69,7 @@ class EzloginFirebase with Ezlogin {
     if (data.value == null) return null;
 
     return EzloginUser.fromSerialized(
-        (data.value as Map?)!.values.first as Map<String, dynamic>?);
+        (data.value as Map?)!.values.first as Map?);
   }
 
   @override
