@@ -48,7 +48,8 @@ class EzloginFirebase with Ezlogin {
   @override
   Future<EzloginUser?> user(String id) async {
     try {
-      final data = await FirebaseDatabase.instance.ref('$usersPath/$id').get();
+      final data =
+          await FirebaseDatabase.instance.ref(usersPath).child(id).get();
       return data.value == null
           ? null
           : EzloginUser.fromSerialized(data.value as Map?);
