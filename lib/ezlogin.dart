@@ -107,10 +107,15 @@ mixin Ezlogin {
   Future<EzloginUser> validateNewUserInfo(EzloginUser user);
 
   ///
-  /// Add a [newUser] to the users with a default [password]. The flag
-  /// [mustChangePassword] should be set to true, so the user will have to
-  /// change their password when connecting the first time.
+  /// Register a new user with a given [newUser], [password].
+  /// This method should create the user in the database and return the created user.
+  Future<bool> registerAsNewUser(
+      {required EzloginUser newUser, required String password});
+
   ///
+  /// Add a [newUser] to the users with a default [password]. This method
+  /// is designed for admins that creates another user, unlike [registerAsNewUser]
+  /// which is for self-registration.
   Future<EzloginUser?> addUser(
       {required EzloginUser newUser, required String password});
 

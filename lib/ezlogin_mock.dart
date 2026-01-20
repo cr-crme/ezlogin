@@ -87,6 +87,17 @@ class EzloginMock with Ezlogin {
   }
 
   @override
+  Future<bool> registerAsNewUser(
+      {required EzloginUser newUser, required String password}) async {
+    if (_users.containsKey(newUser.email)) {
+      return false;
+    }
+
+    _users[newUser.email] = {"user": newUser, "password": password};
+    return true;
+  }
+
+  @override
   Future<EzloginUser?> addUser({
     required EzloginUser newUser,
     required String password,

@@ -176,6 +176,29 @@ class EzloginFirebase with Ezlogin {
   }
 
   @override
+  Future<bool> registerAsNewUser(
+      {required EzloginUser newUser, required String password}) async {
+    try {
+      final credentials = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: newUser.email, password: password);
+      if (credentials.user == null) return false;
+    } on FirebaseAuthException catch (e) {
+      _logger.severe('Error while registering new user: ${e.code}');
+      return false;
+    }
+
+    // Connect the new user id to the database
+    final status = await login(
+        username: newUser.email,
+        password: password,
+        getNewUserInfo: () async => newUser);
+    if (status != EzloginStatus.success) return false;
+
+    return true;
+  }
+
+  @override
   Future<EzloginUser?> addUser(
       {required EzloginUser newUser, required String password}) async {
     // We have to use this secondary app to create a user because creating a
