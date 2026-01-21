@@ -54,6 +54,7 @@ class EzloginMock with Ezlogin {
     required String username,
     required String password,
     Future<EzloginUser?> Function()? getNewUserInfo,
+    Future<String?> Function()? getOldPassword,
     Future<String?> Function()? getNewPassword,
   }) async {
     await Future.delayed(const Duration(seconds: 1));
@@ -65,7 +66,9 @@ class EzloginMock with Ezlogin {
     }
 
     final status = await finalizeLogin(
-        getNewUserInfo: getNewUserInfo, getNewPassword: getNewPassword);
+        getNewUserInfo: getNewUserInfo,
+        getOldPassword: getOldPassword,
+        getNewPassword: getNewPassword);
 
     _currentUser = await user(username);
     return status;
@@ -79,7 +82,9 @@ class EzloginMock with Ezlogin {
 
   @override
   Future<EzloginStatus> updatePassword(
-      {required EzloginUser user, required String newPassword}) async {
+      {required EzloginUser user,
+      required String oldPassword,
+      required String newPassword}) async {
     if (!_users.containsKey(user.email)) return EzloginStatus.wrongUsername;
 
     _users[user.email]!['password'] = newPassword;

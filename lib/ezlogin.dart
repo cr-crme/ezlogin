@@ -43,6 +43,7 @@ mixin Ezlogin {
   ///
   Future<EzloginStatus> finalizeLogin({
     required Future<EzloginUser?> Function()? getNewUserInfo,
+    required Future<String?> Function()? getOldPassword,
     required Future<String?> Function()? getNewPassword,
   }) async {
     var currentUser = await fetchCurrentUser();
@@ -62,13 +63,19 @@ mixin Ezlogin {
       }
     }
 
-    if (getNewPassword != null && currentUser.mustChangePassword) {
+    if (getOldPassword != null &&
+        getNewPassword != null &&
+        currentUser.mustChangePassword) {
+      final oldPassword = await getOldPassword();
       final newPassword = await getNewPassword();
-      if (newPassword == null) {
+      if (oldPassword == null || newPassword == null) {
         logout();
         return EzloginStatus.cancelled;
       }
-      await updatePassword(user: currentUser, newPassword: newPassword);
+      await updatePassword(
+          user: currentUser,
+          oldPassword: oldPassword,
+          newPassword: newPassword);
     }
     return EzloginStatus.success;
   }
@@ -134,8 +141,11 @@ mixin Ezlogin {
   /// Change the password of the [user] by [newPassword]. This method
   /// should set the [mustChangePassword] flag to false afterwards
   ///
-  Future<EzloginStatus> updatePassword(
-      {required EzloginUser user, required String newPassword});
+  Future<EzloginStatus> updatePassword({
+    required EzloginUser user,
+    required String oldPassword,
+    required String newPassword,
+  });
 
   ///
   /// Completely clear the database. This is mostly for debugging purposes

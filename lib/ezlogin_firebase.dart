@@ -109,6 +109,7 @@ class EzloginFirebase with Ezlogin {
     required String username,
     required String password,
     Future<EzloginUser?> Function()? getNewUserInfo,
+    Future<String?> Function()? getOldPassword,
     Future<String?> Function()? getNewPassword,
   }) async {
     try {
@@ -127,7 +128,9 @@ class EzloginFirebase with Ezlogin {
     }
 
     final status = await finalizeLogin(
-        getNewUserInfo: getNewUserInfo, getNewPassword: getNewPassword);
+        getNewUserInfo: getNewUserInfo,
+        getOldPassword: getOldPassword,
+        getNewPassword: getNewPassword);
     _currentUser = await fetchCurrentUser();
 
     return status;
@@ -155,9 +158,25 @@ class EzloginFirebase with Ezlogin {
   }
 
   @override
-  Future<EzloginStatus> updatePassword(
-      {required EzloginUser user, required String newPassword}) async {
+  Future<EzloginStatus> updatePassword({
+    required EzloginUser user,
+    required String oldPassword,
+    required String newPassword,
+  }) async {
     final authenticator = FirebaseAuth.instance;
+    try {
+      await authenticator.signInWithEmailAndPassword(
+          email: user.email, password: oldPassword);
+    } catch (e) {
+      if ((e as FirebaseAuthException).code == 'user-not-found') {
+        return EzloginStatus.wrongUsername;
+      } else if (e.code == 'wrong-password') {
+        return EzloginStatus.wrongPassword;
+      } else {
+        return EzloginStatus.unrecognizedError;
+      }
+    }
+
     try {
       await authenticator.currentUser?.updatePassword(newPassword);
     } catch (e) {
