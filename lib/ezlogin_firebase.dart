@@ -101,7 +101,11 @@ class EzloginFirebase with Ezlogin {
       }());
     }
 
-    _currentUser = await fetchCurrentUser();
+    try {
+      _currentUser = await fetchCurrentUser();
+    } catch (_) {
+      logout();
+    }
   }
 
   @override
